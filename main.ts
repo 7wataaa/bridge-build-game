@@ -5,8 +5,8 @@ function renderLED(ledMap: boolean[][]) {
         })
     })
 }
-function ledToggleFromBool(x: number, y: number, shouldPlot: boolean) {
-    if (shouldPlot) {
+function ledToggleFromBool(x: number, y: number, value: boolean) {
+    if (value) {
         led.plot(x, y)
     } else {
         led.unplot(x, y)
