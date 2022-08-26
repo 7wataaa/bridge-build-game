@@ -75,34 +75,32 @@ const defaultLedMap = [
         false
     ]
 ]
+
 let ledMap = defaultLedMap;
-let currentColumn = 0;
+let currentReelIndex = 0;
+let gameLevel = 0;
+let gameTicks = [300, 200, 100, 70];
 
 input.onButtonPressed(Button.B, function () {
-    currentColumn++;
+    currentReelIndex++;
     // 新しい列に移動するときにtrueを追加する
     ledMap = ledMap.map((list, index) =>
-        index == currentColumn ? [false, false, false, false, true] : list
+        index == currentReelIndex ? [false, false, false, false, true] : list
     )
 })
 
-let gameLevel = 0;
-// let gameTicks = [300, 300, 300, 300]
-let gameTicks = [300, 200, 100, 70];
-let maxGameLevel = gameTicks.length;
-
 basic.forever(function () {
-    // 一巡終わり時
-    if (currentColumn >= 5) {
+    // 全リールが止まったとき
+    if (currentReelIndex >= 5) {
         const isCleared = judgeGame(ledMap);
 
         if (isCleared) {
             basic.showIcon(IconNames.Happy);
             basic.pause(1000);
 
-            gameLevel = gameLevel + 1;
+            gameLevel++;
 
-            if (gameLevel >= maxGameLevel) {
+            if (gameLevel >= gameTicks.length) {
                 basic.showIcon(IconNames.SmallHeart);
                 basic.pause(100);
                 basic.showIcon(IconNames.Heart);
@@ -126,12 +124,12 @@ basic.forever(function () {
         }
 
         // 初期化処理
-        currentColumn = 0;
+        currentReelIndex = 0;
         ledMap = defaultLedMap;
         return;
     }
 
-    rotateArray(ledMap[currentColumn]);
+    rotateArray(ledMap[currentReelIndex]);
     renderLED(ledMap);
 
     basic.pause(gameTicks[gameLevel]);
